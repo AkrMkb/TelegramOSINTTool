@@ -3,7 +3,9 @@
 Telegram の公開チャンネルやグループを収集・監視し、SQLite に保存・可視化するための OSINT ツールです。  
 Telethon をベースにしており、以下の機能を備えています。
 
-<img width="3828" height="1903" alt="ui" src="https://github.com/user-attachments/assets/445a9c92-7563-40c3-aafc-508f802848ea" />
+<img width="3828" height="1903" alt="ui" src="https://github.com/user-attachments/assets/2b3607ae-871d-49e5-a72e-7016f3100e51" />
+
+
 
 
 - **公開検索**: `contacts.Search` によるチャンネル探索
