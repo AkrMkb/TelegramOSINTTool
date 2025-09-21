@@ -32,13 +32,16 @@ Telethon をベースにしており、以下の機能を備えています。
 │   ├── crawl.py
 │   ├── db.py
 │   ├── discovery.py
+│   ├── discovery_guard.py
 │   ├── scoring.py
 │   ├── stream.py
-│   └── translate.py
+│   ├── translate.py
+│   └── util_channels.py
 ├── docker-compose.yml
 ├── Dockerfile
 ├── requirements.txt
 └── README.md
+
 ```
 
 ---
