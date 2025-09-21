@@ -67,6 +67,7 @@ config.example.yamlを参考に設定を記入してください。
 セッションファイルがまだ無い場合、コンテナを対話モードで起動します：
 
 ```bash
+chmod 755 ./db
 docker compose build
 docker compose run --rm collector
 ```
