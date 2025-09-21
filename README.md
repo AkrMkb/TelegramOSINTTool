@@ -1,10 +1,9 @@
 # Telegram OSINT Tool
 
-Telegram の公開チャンネルやグループを収集・監視し、SQLite に保存・可視化するための OSINT ツールです。  
+Telegram の公開チャンネルやグループを収集・監視し、SQLite に保存・Viwerを備えた OSINT ツールです。  
 Telethon をベースにしており、以下の機能を備えています。
 
 <img width="3828" height="1903" alt="ui" src="https://github.com/user-attachments/assets/2b3607ae-871d-49e5-a72e-7016f3100e51" />
-
 
 
 
