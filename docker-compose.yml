@@ -1,0 +1,65 @@
+services:
+  tor:
+    image: peterdavehello/tor-socks-proxy:latest
+    container_name: teleosint-tor
+    restart: unless-stopped
+    environment:
+      - TOR_NEED_DOWNLOAD_GEOIP=false
+    healthcheck:
+      # 9150 が開いていれば健康判定（最小限）
+      test: ["CMD-SHELL", "nc -z 127.0.0.1 9150 || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 30s   # 起動にムラがあるため余裕を持たせる
+
+  collector:
+    build: .
+    container_name: teleosint-collector
+    # tor と同一ネット名前空間で動かす
+    network_mode: "service:tor"
+    depends_on:
+      tor:
+        # health がフレークする環境では 'service_started' でもOK
+        condition: service_healthy
+    environment:
+      - PYTHONPATH=/app/src
+      - TZ=Asia/Tokyo
+      - TOR_PROXY_ENABLE=1
+      - TOR_PROXY_HOST=127.0.0.1   # 同一名前空間なので loopback
+      - TOR_PROXY_PORT=9150        # ← 9050 ではなく 9150 に修正
+    volumes:
+      - ./config:/app/config:ro
+      - ./db:/app/db
+    restart: unless-stopped
+    command:
+      - app/tele_osint_cli.py
+      - --config
+      - /app/config/config.yaml
+      - --discover
+      - --backfill
+      - --new-only
+      - --run
+      - --debug
+
+  ui:
+    build: .
+    container_name: teleosint-ui
+    command:
+      - -m
+      - streamlit
+      - run
+      - app/streamlit_app.py
+      - --server.port=8501
+      - --server.address=0.0.0.0
+    ports:
+      - "8501:8501"
+    environment:
+      - PYTHONPATH=/app/src
+      - TZ=Asia/Tokyo
+      - STREAMLIT_DB_PATH=/app/db/osint_tele.db
+    volumes:
+      - ./db:/app/db:ro
+    depends_on:
+      - collector
+    restart: unless-stopped

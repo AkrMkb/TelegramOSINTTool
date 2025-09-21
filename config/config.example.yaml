@@ -1,0 +1,89 @@
+# Telegram API 認証情報
+api_id: 123456
+api_hash: "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+session: "./db/telegram.session"
+
+# SQLite DB パス
+sqlite_path: "./db/osint_tele.db"
+
+# 初期監視チャンネル（公開のみ推奨：@username か https://t.me/<username>）
+seed_channels:
+  - "@example_channel"
+
+# 探索（公開検索＋クロール）
+discovery:
+  #  公開検索。1クエリ50件以内を目安。クエリ数が多い日は limit を下げるなど調整。
+  queries: ["security", "APT", "cyber", "malware"]
+  limit_per_query: 25   # <= 50 を推奨（50超は過剰探索になりがち）
+  filters:
+    # 小規模ノイズを弾く。最初は 100〜300 程度が穏当。
+    min_members: 150
+    username_block_patterns:
+      - "(anime|vtuber|idol|movie|cosplay|dubbed|telugu)"
+
+  crawl:
+    enabled: true
+
+    # 深さ1で十分（2以上は FloodWait の確率が上がる）
+    max_depth: 1
+
+    # 1回のジョブで触るチャンネル数の上限。最初は 50〜100 を推奨。
+    max_channels: 80
+
+    # @mention / t.me リンクを辿るか
+    follow_mentions: true
+    follow_tme_links: true
+
+    # 本文に含まれていたら次に辿らないためのブロックキーワード
+    blocklist_keywords: ["airdrop","giveaway","music","game","movie"]
+
+    allow_types: ["channel", "supergroup"]
+
+    # chat groupへの参加の間隔。1000〜2000ms（=1〜2秒）を推奨
+    join_sleep_ms: 1500
+
+    # FloodWait が来たとき待つ余白。2〜5秒を推奨
+    floodwait_padding_s: 3
+
+    # FloodWait がこの秒数を超えたら「待たずに SKIP」する安全弁。
+    # 600秒（10分）程度にとどめる。
+    max_wait_on_flood_s: 600
+
+    # 1回のクロール全体のタイムアウト。10〜20分が目安。
+    global_time_limit_s: 900
+
+# キーワード（スコアリング対象）
+keywords:
+  ja: ["攻撃","侵入","フィッシング"]
+  en: ["attack","breach","phishing"]
+  zh: []
+  ru: []
+  ar: []
+
+# ネガティブ（本文に含まれたら無条件に除外）
+negatives: ["job","hiring"]
+
+# ヒット閾値（1なら緩め、2以上でノイズ減）
+score_threshold: 1
+
+# バックフィル・収集
+collect:
+  # バックフィルで遡る件数。多すぎると API 呼び出しが増える。
+  backfill_limit: 100
+  # バックフィルを定期に回す場合は “最短でも 5〜15 分間隔” を目安に。
+  poll_interval_sec: 900   # 例：15分
+
+# 翻訳
+translation:
+  enabled: true
+  provider: "googletrans"  # DeepL有償キーがあるなら "deepl" を推奨
+  timeout_sec: 8
+  # deepl_api_key: ""       # 環境変数 DEEPL_API_KEY 推奨
+  # deepl_api_url: ""       # 例: https://api-free.deepl.com/v2/translate
+
+# 再起動の時間とどれを再度実行するか
+maintenance:
+  interval_sec: 43200  # 24h
+  run_discover: true
+  run_crawl: true
+  backfill_new_only: true
