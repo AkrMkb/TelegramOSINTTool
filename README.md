@@ -57,7 +57,8 @@ Telethon をベースにしており、以下の機能を備えています。
 ``` bash
 cp config/config.example.yaml config/config.yaml
 ```
-config.example.yamlを参考に設定を記入してください。
+config.example.yamlを参考に設定を記入してください。  
+ここでapi_idとapi_hashは記入する必要があります。
 
 ## 実行方法
 
@@ -74,6 +75,8 @@ docker compose run --rm collector
 
 電話番号 / 認証コード / 2FA パスワードを入力すると  
 `./db/telegram.session` が作成されます。
+
+一旦docker compose のプロセスを落としてください。  
 
 #### 2回目以降のログイン
 以後は非対話で起動できます：
