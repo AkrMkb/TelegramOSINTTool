@@ -91,17 +91,6 @@ docker compose logs -f ui
 ブラウザで http://localhost:8501 を開きます。
 
 
-
-## 主なオプション
-
-- `--discover` : 公開検索で候補を探索
-- `--backfill` : 過去ログ取得
-- `--new-only` : state 以降のみバックフィル
-- `--run` : ライブ監視
-- `--debug` : デバッグ出力
-
-
-
 ## UI
 ブラウザで http://localhost:8501 または compose で割り当てたポートを開きます。
 
